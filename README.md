@@ -17,10 +17,10 @@ Visual Studio 2013
 Qt 5.3.2 64bit/32bit  
 
 ##Release note
-beta v0.9 2015-1-5  
+###beta v0.9 2015-1-5  
 Basic function to draw pixel.  
 
-v1.0 2015-1-12  
+###v1.0 2015-1-12  
 1.Add another swatches.  
 2.Move tool.  
 3.Sealing layer operation.  
