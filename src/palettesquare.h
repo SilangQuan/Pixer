@@ -18,8 +18,8 @@ public:
 	PaletteSquare(QColor c, int row, int column, QWidget  *parent = 0);
 	~PaletteSquare();
 
-	void setName(QString &s);
-	void setColor(QColor &c);
+    void setName(const QString &s);
+    void setColor(const QColor &c);
 	int getRow();
 	int getColumn();
 	QColor getColor();

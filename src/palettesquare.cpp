@@ -48,12 +48,12 @@ void PaletteSquare::mouseReleaseEvent(QMouseEvent *event)
 }
 
 
-void PaletteSquare::setName(QString &s)
+void PaletteSquare::setName(const QString &s)
 {
 	this->name = s;
 }
 
-void PaletteSquare::setColor(QColor &c)
+void PaletteSquare::setColor(const QColor &c)
 {
 	this->currentColor = c;
 }

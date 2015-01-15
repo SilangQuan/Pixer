@@ -34,10 +34,10 @@ public:
 	QSize sizeHint() const;
 	QImage getMergedImage();
 	void paint(int x, int j, QColor c);
-	void paint(QPoint &p, QColor c);
+    void paint(const QPoint &p, QColor c);
 	void crop();
-	void erasePixel(QPoint &p);
-	QColor strawColor(QPoint &p);
+    void erasePixel(const QPoint &p);
+    QColor strawColor(const QPoint &p);
 	void initWithFile(QString &path);
 	float getScaleFactor() const;
 	QString getResolution() const;
@@ -84,9 +84,9 @@ private:
 	QPoint moveStartPoint;
 	QPoint moveStartAnchor;
 	//Judge screenPoint p in image or not
-	bool isContained(QPoint &p);
+    bool isContained(const QPoint &p);
 	//Map screen point to m_image point
-	QPoint mapToPixmap(QPoint &p);
+    QPoint mapToPixmap(const QPoint &p);
 	//Stroke when use slection tool.
 	void paintSelectionBorder(QPainter &painter, QRect rect);
 	

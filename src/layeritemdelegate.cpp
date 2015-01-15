@@ -34,7 +34,24 @@ LayerItemDelegate::~LayerItemDelegate()
 void LayerItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-	if (index.column() == 1) // value column
+    if(index.column() == 0)
+    {
+        if (option.state & QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+
+        bool data = index.data((Qt::CheckStateRole)).toBool();
+        QStyleOptionButton checkboxStyle;
+        QRect checkboxRect = QApplication::style()->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxStyle);
+        checkboxStyle.rect = option.rect;
+        checkboxStyle.rect.setLeft(option.rect.x() + option.rect.width()/2 - checkboxRect.width()/2);
+        if(data)
+            checkboxStyle.state = QStyle::State_On |QStyle::State_Active| QStyle::State_Enabled;
+        else
+            checkboxStyle.state = QStyle::State_Off | QStyle::State_Enabled;
+        QApplication::style()->drawControl(QStyle::CE_CheckBox, &checkboxStyle, painter);
+    }
+
+    if (index.column() == 1)
 	{
 		if (option.state & QStyle::State_Selected)
 			painter->fillRect(option.rect, option.palette.highlight());
@@ -66,12 +83,10 @@ void LayerItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
 		QString layerName = index.model()->data(index, Qt::DisplayRole).toString();
 		QTextOption textOption = Qt::AlignLeft | Qt::AlignVCenter;
 		painter->drawText(textRect, layerName, textOption);
-		//如果当前有焦点，就绘制一个焦点矩形，否则什么都不做    
-		//drawFocus(painter, myOption, myOption.rect);
 	}
 	else
 	{
-		QStyledItemDelegate::paint(painter, option, index);
+        //QStyledItemDelegate::paint(painter, option, index);
 	}
 }
 

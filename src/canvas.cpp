@@ -264,14 +264,14 @@ void Canvas::paint(int x, int y, QColor c)
 	this->update();
 }
 
-void Canvas::paint(QPoint &p, QColor c)
+void Canvas::paint(const QPoint &p, QColor c)
 {
 	LayerItem *item = layerManager->getSelectItem();
 	item->thumbnail.setPixel(p.x() - item->anchor.rx(), p.y() - item->anchor.ry(), c.rgba());
 	this->update();
 }
 
-void Canvas::erasePixel(QPoint &p)
+void Canvas::erasePixel(const QPoint &p)
 {
 	QColor c(0, 0, 0, 0);
 	LayerManager* instance = LayerManager::getInstance();
@@ -280,7 +280,7 @@ void Canvas::erasePixel(QPoint &p)
 	this->update();
 }
 
-QColor Canvas::strawColor(QPoint &p)
+QColor Canvas::strawColor(const QPoint &p)
 {
 	return QColor::fromRgba(m_surface.pixel(p));
 }
@@ -297,7 +297,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 		case MOVE:
 			if (event->button() == Qt::LeftButton)
 			{
-				moveStartPoint = mapToPixmap(event->pos());
+                moveStartPoint = mapToPixmap(event->pos());
 				moveStartAnchor = layerManager->getSelectItem()->anchor;
 			}
 			break;
@@ -478,6 +478,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 				m_prediction.setPixel(mapToPixmap(event->pos()), qRgba(255, 255, 255, 128));
 				this->update();
 			}
+            else{
+                m_prediction.fill(qRgba(0, 0, 0, 0));
+                this->update();
+            }
 		}
 
 		break;
@@ -495,6 +499,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 				this->update();
 			}
 		}
+        else{
+            m_prediction.fill(qRgba(0, 0, 0, 0));
+            this->update();
+        }
 		
 		break;
 	case STRAW:
@@ -510,7 +518,11 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 		{
 			m_prediction.setPixel(mapToPixmap(event->pos()), qRgba(255, 255, 255, 128));
 			this->update();
-		}
+        }
+        else{
+            m_prediction.fill(qRgba(0, 0, 0, 0));
+            this->update();
+        }
 		break;
 
 	case SELECTION1:
@@ -697,7 +709,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 	
 }
 
-bool Canvas::isContained(QPoint &p)
+bool Canvas::isContained(const QPoint &p)
 {
 	QSize s = QSize(m_scaleFactor * m_width, m_scaleFactor *m_height);
 
@@ -724,7 +736,7 @@ void Canvas::setBackColor(QColor c)
 	this->backColor = c;
 }
 
-QPoint Canvas::mapToPixmap(QPoint &screenPoint)
+QPoint Canvas::mapToPixmap(const QPoint &screenPoint)
 {
 	QSize pixmapSize = QSize(m_scaleFactor * m_width, m_scaleFactor *m_height);
 

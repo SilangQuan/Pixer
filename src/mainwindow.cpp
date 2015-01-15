@@ -3,9 +3,26 @@
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent), canvas()
 {
+    applicationDir = QDir(QApplication::applicationDirPath());
 
-	QIcon c("./Resources/images/pixer_icon.ico");
-	QPixmap p("./Resources/images/pixer_icon.ico");
+#if defined(Q_OS_WIN)
+    if (applicationDir.dirName().toLower() == "debug"
+            || applicationDir.dirName().toLower() == "release"
+            || applicationDir.dirName().toLower() == "bin")
+			//applicationDir.cdUp();
+#elif defined(Q_OS_MAC)
+    if (applicationDir.dirName() == "MacOS") {
+        applicationDir.cdUp();
+        applicationDir.cdUp();
+        applicationDir.cdUp();
+    }
+#endif
+
+	qDebug() << applicationDir.absolutePath();
+    QIcon c(applicationDir.absolutePath() + "/Resources/images/pixer_icon.ico");
+
+    QPixmap p(applicationDir.absolutePath() + "/Resources/images/pixer_icon.ico");
+
 	this->setWindowIcon(c);
 
 	QDesktopWidget* desktopWidget = QApplication::desktop();
@@ -98,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent)
 	palettePanel->setWindowTitle(tr("Palette"));
 	palettePanel->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 	this->addDockWidget(Qt::RightDockWidgetArea, palettePanel);
+    palettePanel->loadPalette(QString(applicationDir.absolutePath() +"/Resources/palette/default.gpl"));
 	connect(palettePanel, SIGNAL(changeForecolorSignal(QColor)), foreSwatches, SLOT(changeColor(QColor)));
 
 	layerPanel = new LayerPanel(this);
@@ -116,6 +134,22 @@ MainWindow::MainWindow(QWidget *parent)
 	historyPanel->hide();
 	connect(historyPanel, SIGNAL(historyTriggered()), canvas, SLOT(updateCanvasAndThumb()));
 
+    //
+#if defined(Q_OS_WIN)
+    palettePanel->setStyleSheet("background-color: #393939;");
+    historyPanel->setStyleSheet("background-color: #393939;");
+    layerPanel->setStyleSheet("background-color: #393939;");
+    thumbnailPanel->setStyleSheet("background-color: #393939; padding: 0px;");
+#elif defined(Q_OS_MAC)
+    palettePanel->setStyleSheet("background-color: #393939; color:#000000");
+    historyPanel->setStyleSheet("background-color: #393939; color:#000000");
+    layerPanel->setStyleSheet("background-color: #393939; color:#000000");
+    thumbnailPanel->setStyleSheet("background-color: #393939; color:#000000;padding: 0px;");
+    toolbar->setStyleSheet("QToolBar{background: #393939; border: 0px solid gray;} QToolbutton{background:black} ");
+    //toolbar->setStyleSheet("QToolBar::tab{color:gray} ");
+    //toolbar->setStyleSheet("QToolBar::tab:selected{color:white} ");
+
+#endif
 	LayerManager* pManager = LayerManager::getInstance();
 	connect(pManager, SIGNAL(updateCanvas()), canvas, SLOT(update()));
 	//pManager->setCanvasObserver(canvas);
@@ -181,7 +215,8 @@ void MainWindow::saveAs()
 
 void MainWindow::updateThumbnail()
 {
-	thumbnailPanel->setThumb(QPixmap::fromImage(canvas->getMergedImage()));
+    QPixmap tmp = QPixmap::fromImage(canvas->getMergedImage());
+    thumbnailPanel->setThumb(tmp);
 
 }
 
@@ -279,6 +314,12 @@ void MainWindow::createActions()
 	sepiaGreenAct->setEnabled(true);
 	connect(sepiaGreenAct, SIGNAL(triggered()), canvas, SLOT(sepiaGreenLayer()));
 
+    showToolBarAct = new QAction(tr("&Tool bar"), this);
+    showToolBarAct->setEnabled(true);
+    showToolBarAct->setCheckable(true);
+    showToolBarAct->setChecked(true);
+    connect(showToolBarAct, SIGNAL(triggered()), this, SLOT(showToolbar()));
+
 	showThumbAct = new QAction(tr("&Thumbnail"), this);
 	showThumbAct->setEnabled(true);
 	showThumbAct->setCheckable(true);
@@ -308,47 +349,47 @@ void MainWindow::createActions()
 
 	toolbarGroup = new QActionGroup(this);
 	
-	moveAct = new QAction(QIcon("./Resources/images/move.png"), tr("&Move"), toolbarGroup);
+    moveAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/move.png"), tr("&Move"), toolbarGroup);
 	moveAct->setShortcut(tr("M"));
 	moveAct->setCheckable(true);
 	connect(moveAct, SIGNAL(triggered()), this, SLOT(useMove()));
 
-	cropAct = new QAction(QIcon("./Resources/images/crop.png"), tr("&Crop"), toolbarGroup);
+    cropAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/crop.png"), tr("&Crop"), toolbarGroup);
 	cropAct->setShortcut(tr("C"));
 	cropAct->setCheckable(true);
 	connect(cropAct, SIGNAL(triggered()), this, SLOT(useCrop()));
 
-	penAct = new QAction(QIcon("./Resources/images/pencil.png"), "Pen", toolbarGroup);
+    penAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/pencil.png"), "Pen", toolbarGroup);
 	penAct->setShortcut(tr("B"));
 	penAct->setCheckable(true);
 	connect(penAct, SIGNAL(triggered()), this, SLOT(usePen()));
 
-	eraserAct = new QAction(QIcon("./Resources/images/eraser.png"), "Eraser", toolbarGroup);
+    eraserAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/eraser.png"), "Eraser", toolbarGroup);
 	eraserAct->setShortcut(tr("E"));
 	eraserAct->setCheckable(true);
 	connect(eraserAct, SIGNAL(triggered()), this, SLOT(useEraser()));
 
-	selectionAct = new QAction(QIcon("./Resources/images/rectangle_selection.png"), "Selection", toolbarGroup);
+    selectionAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/rectangle_selection.png"), "Selection", toolbarGroup);
 	selectionAct->setShortcut(tr("M"));
 	selectionAct->setCheckable(true);
 	connect(selectionAct, SIGNAL(triggered()), this, SLOT(useRectSelection()));
 
-	bucketAct = new QAction(QIcon("./Resources/images/bucket.png"), "Bucket", toolbarGroup);
+    bucketAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/bucket.png"), "Bucket", toolbarGroup);
 	bucketAct->setShortcut(tr("G"));
 	bucketAct->setCheckable(true);
 	connect(bucketAct, SIGNAL(triggered()), this, SLOT(useBucket()));
 
-	strawAct = new QAction(QIcon("./Resources/images/eyedropper.png"), "Straw", toolbarGroup);
+    strawAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/eyedropper.png"), "Straw", toolbarGroup);
 	strawAct->setShortcut(tr("I"));
 	strawAct->setCheckable(true);
 	connect(strawAct, SIGNAL(triggered()), this, SLOT(useStraw()));
 
-	dodgeAct = new QAction(QIcon("./Resources/images/dodge.png"), "Dodge", toolbarGroup);
+    dodgeAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/dodge.png"), "Dodge", toolbarGroup);
 	dodgeAct->setShortcut(tr("O"));
 	dodgeAct->setCheckable(true);
 	connect(dodgeAct, SIGNAL(triggered()), this, SLOT(useDodge()));
 
-	zoomAct = new QAction(QIcon("./Resources/images/zoom.png"), "Zoom", toolbarGroup);
+    zoomAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/zoom.png"), "Zoom", toolbarGroup);
 	zoomAct->setShortcut(tr("Z"));
 	zoomAct->setCheckable(true);
 	connect(zoomAct, SIGNAL(triggered()), this, SLOT(useZoom()));
@@ -404,6 +445,7 @@ void MainWindow::createMenus()
 	operationMenu->setStyleSheet(ss);
 
 	windowsMenu = new QMenu(tr("&Windows"), this);
+    windowsMenu->addAction(showToolBarAct);
 	windowsMenu->addAction(showThumbAct);
 	windowsMenu->addAction(showPaletteAct);
 	windowsMenu->addAction(showLayerAct);
@@ -515,7 +557,7 @@ void  MainWindow::keyPressEvent(QKeyEvent *e)
 	{
 		if (canvas->operationType == ZOOMOUT)
 		{
-			QPixmap pixmap("./Resources/images/zoomin_ico.png");
+            QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/zoomin_ico.png");
 			QCursor cursor = QCursor(pixmap, -1, -1);
 			setCursor(cursor);
 			canvas->setOperationType(ZOOMIN);
@@ -543,7 +585,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 	{
 		if (canvas->operationType == ZOOMIN)
 		{
-			QPixmap pixmap("./Resources/images/zoomout_ico.png");
+            QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/zoomout_ico.png");
 			QCursor cursor = QCursor(pixmap, -1, -1);
 			setCursor(cursor);
 			canvas->setOperationType(ZOOMOUT);
@@ -564,7 +606,8 @@ void MainWindow::mousePressEvent(QMouseEvent *e)
 
 void MainWindow::useMove()
 {
-	QPixmap pixmap("./Resources/images/move_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/move_ico.png");
+    qDebug()<<"useMove"<<pixmap.width();
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(MOVE);
 	setCursor(cursor);
@@ -572,7 +615,7 @@ void MainWindow::useMove()
 
 void MainWindow::usePen()
 {
-	QPixmap pixmap("./Resources/images/pen_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/pen_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(PEN);
 	setCursor(cursor);
@@ -580,7 +623,7 @@ void MainWindow::usePen()
 
 void MainWindow::useEraser()
 {
-	QPixmap pixmap("./Resources/images/eraser_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/eraser_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(ERASER);
 	setCursor(cursor);
@@ -588,7 +631,7 @@ void MainWindow::useEraser()
 
 void MainWindow::useStraw()
 {
-	QPixmap pixmap("./Resources/images/straw_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/straw_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(STRAW);
 	setCursor(cursor);
@@ -596,7 +639,7 @@ void MainWindow::useStraw()
 
 void MainWindow::useDodge()
 {
-	QPixmap pixmap("./Resources/images/pen_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/pen_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(DODGE);
 	setCursor(cursor);
@@ -604,7 +647,7 @@ void MainWindow::useDodge()
 
 void MainWindow::useBucket()
 {
-	QPixmap pixmap("./Resources/images/bucket_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/bucket_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(BUCKET);
 	setCursor(cursor);
@@ -613,7 +656,7 @@ void MainWindow::useBucket()
 
 void MainWindow::useZoom()
 {
-	QPixmap pixmap("./Resources/images/zoomout_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/zoomout_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(ZOOMOUT);
 	setCursor(cursor);
@@ -621,7 +664,7 @@ void MainWindow::useZoom()
 
 void MainWindow::useRectSelection()
 {
-	QPixmap pixmap("./Resources/images/rectangle_selection_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/rectangle_selection_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(SELECTION1);
 	setCursor(cursor);
@@ -629,7 +672,7 @@ void MainWindow::useRectSelection()
 
 void MainWindow::useCrop()
 {
-	QPixmap pixmap("./Resources/images/crop_ico.png");
+    QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/crop_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(CROP);
 	setCursor(cursor);
@@ -638,9 +681,18 @@ void MainWindow::useCrop()
 void MainWindow::updateStatueBar(float scaleFactor)
 {
 	zoomLabel->setText(QString::number(scaleFactor * 100) + "%");
-/*
-	thumbnailPanel->updateZoomLabel(canvas->getScaleFactor());
-	thumbnailPanel->updateZoomSlider(canvas->getScaleFactor());*/
+}
+
+void MainWindow::showToolbar()
+{
+    if (toolbar->isVisible())
+    {
+        toolbar->hide();
+    }
+    else
+    {
+        toolbar->show();
+    }
 }
 
 void MainWindow::showThumbWindow()
@@ -695,7 +747,7 @@ void MainWindow::showHistoryWindow()
 void MainWindow::loadPalette()
 {
 	QString fileName;
-	QFileDialog* fd = new QFileDialog(this, tr("Load Palette File"), "./Resources/palette", tr("Gimp Palette File(*.gpl)"));
+    QFileDialog* fd = new QFileDialog(this, tr("Load Palette File"), applicationDir.absolutePath() + "/Resources/palette", tr("Gimp Palette File(*.gpl)"));
 	fd->setFileMode(QFileDialog::ExistingFiles);
 	fd->setViewMode(QFileDialog::Detail);
 
@@ -709,7 +761,7 @@ void MainWindow::loadPalette()
 void MainWindow::savePalette()
 {
 	QString fileName = QFileDialog::getSaveFileName(this,
-		tr("Save As"), "./Resources/palette",
+        tr("Save As"), applicationDir.absolutePath() + "/Resources/palette",
 		tr("GPL (*.gpl)"));
 	if (fileName.isEmpty())
 	{

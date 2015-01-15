@@ -19,7 +19,7 @@ public:
 	static  LayerManager *getInstance();
 	QList<LayerItem>* getpLayerList();
 	void clearLayers();
-	void setLayerSize(QSize &size);
+    void setLayerSize(const QSize &size);
 	QImage* getSelectedLayer();
 	int getSelectedLayerIndex();
 	QSize getLayerSize() const;

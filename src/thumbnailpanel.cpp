@@ -3,8 +3,7 @@
 ThumbnailPanel::ThumbnailPanel(QWidget * parent) : QDockWidget(parent)
 {
 	this->setMinimumSize(200, 200);
-	this->setStyleSheet("background-color: #393939; padding: 0px;");
-
+    setStyleSheet("background-color: #393939;");
 	this->setFeatures(QDockWidget::DockWidgetFloatable |\
 		QDockWidget::DockWidgetMovable|\
 		QDockWidget::DockWidgetClosable);

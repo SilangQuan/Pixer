@@ -29,7 +29,7 @@ QVariant LayerTableModel::data(const QModelIndex &index, int role) const
 		}
 		if (role == Qt::SizeHintRole)
 		{
-			return QSize(20, 50);
+            return QSize(30, 50);
 		}
 	}
 	else
@@ -154,7 +154,7 @@ void LayerTableModel::refreshModel()
 	//emit updateCount(this->rowCount(QModelIndex()));
 }
 
-QModelIndex& LayerTableModel::selecttedIndex(int row)
+const QModelIndex& LayerTableModel::selecttedIndex(int row)
 {
 	return this->createIndex(row, 1);
 }

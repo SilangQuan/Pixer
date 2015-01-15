@@ -2,6 +2,7 @@
 #define LAYERITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QApplication>
 #include <QLineEdit>
 #include <QDebug>
 #include <QPainter>

@@ -112,7 +112,7 @@ void LayerManager::clearLayers()
 	layerlist.clear();
 }
 
-void LayerManager::setLayerSize(QSize &size)
+void LayerManager::setLayerSize(const QSize &size)
 {
 	layerSize = size;
 }

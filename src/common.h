@@ -4,6 +4,8 @@
 #include <QString>
 #include <QImage>
 #include <QPoint>
+#include <QDir>
+
 enum COLORMODE{RGB,MONO};
 
 enum OPERATIONTYPE{ NORMAL, PEN, CROP, ERASER, STRAW, ZOOMIN, \
@@ -20,4 +22,6 @@ struct LayerItem
 	unsigned int layerNo;
 	
 };
+
+
 #endif

@@ -3,7 +3,6 @@
 HistoryPanel::HistoryPanel(QUndoStack *stack,QWidget *parent)
 : QDockWidget(parent), undoView(stack)
 {
-	this->setStyleSheet("background-color: #393939;");
 	this->setFeatures(QDockWidget::DockWidgetFloatable | \
 		QDockWidget::DockWidgetMovable | \
 		QDockWidget::DockWidgetClosable);

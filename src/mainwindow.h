@@ -23,6 +23,7 @@
 #include <QSizePolicy>
 #include <QToolBar>
 #include <QCursor>
+#include <QDir>
 #include "canvas.h"
 #include "newfiledlg.h"
 #include "swatches.h"
@@ -45,6 +46,7 @@ public:
 private:
 	void createActions();
 	void createMenus();
+    QDir applicationDir;
 	
 	QScrollArea *scrollArea;
 	QWidget *centralWidget;
@@ -100,6 +102,7 @@ private:
 	QAction *showPaletteAct;
 	QAction *showThumbAct;
 	QAction *showHistoryAct;
+    QAction *showToolBarAct;
 
 	QAction *undoAction;
 	QAction *redoAction;
@@ -138,6 +141,7 @@ private slots:
 	void loadPalette();
 	void savePalette();
 
+    void showToolbar();
 	void showThumbWindow();
 	void showPaletteWindow();
 	void showLayerWindow();

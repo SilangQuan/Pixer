@@ -33,7 +33,7 @@ public:
 	void deleteItem(int index);
 	void addNewItem();
 	
-	QModelIndex& selecttedIndex(int row);
+    const QModelIndex &selecttedIndex(int row);
 
 	void setSelecttedRow(int row);
 	int getSelecttedRow() const;

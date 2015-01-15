@@ -3,7 +3,7 @@
 LayerPanel::LayerPanel(QWidget * parent) : QDockWidget(parent)
 {
 	this->setMinimumSize(200, 200);
-	this->setStyleSheet("background-color: #393939; padding: 0px;");
+    this->setStyleSheet("background-color: #393939; padding: 0px;");
 	this->setFeatures(QDockWidget::DockWidgetFloatable | \
 		QDockWidget::DockWidgetMovable | \
 		QDockWidget::DockWidgetClosable);

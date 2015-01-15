@@ -1,9 +1,11 @@
 #include "palettepanel.h"
+#include "QDir"
 
 PalettePanel::PalettePanel(QWidget * parent) : QDockWidget(parent)
 {
 	//this->setMinimumSize(200, 150);
-	this->setStyleSheet("background-color: #393939;");
+
+    setStyleSheet("background-color: #393939;");
 	this->setFeatures(QDockWidget::DockWidgetFloatable | \
 		QDockWidget::DockWidgetMovable | \
 		QDockWidget::DockWidgetClosable);
@@ -18,8 +20,6 @@ PalettePanel::PalettePanel(QWidget * parent) : QDockWidget(parent)
 
 	mainLayout = new QGridLayout();
 	mainLayout->setVerticalSpacing(15);
-
-	loadPalette(QString("./Resources/palette/default.gpl"));
 
 
 	mainWidget = new QWidget(this);
@@ -67,9 +67,8 @@ void PalettePanel::paletteSquareClicked(QColor c)
 	emit changeForecolorSignal(c);
 }
 
-void PalettePanel::loadPalette(QString &path)
+void PalettePanel::loadPalette(const QString &path)
 {
-	//mainLayout->cl
 	QFile file(path);
 	if (!file.open(QIODevice::ReadOnly)) {
 		QMessageBox::information(0, "Palette load error!", file.errorString());

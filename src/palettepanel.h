@@ -13,6 +13,7 @@
 #include <QAction>
 
 #include "palettesquare.h"
+#include "common.h"
 
 class PalettePanel : public QDockWidget
 {
@@ -40,7 +41,7 @@ signals:
 
 public slots:
 	void paletteSquareClicked(QColor c);
-	void loadPalette(QString &path);
+    void loadPalette(const QString &path);
 	void savePalette(QString &path);
 
 private slots:

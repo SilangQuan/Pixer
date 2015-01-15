@@ -14,12 +14,16 @@ LayerTableView::LayerTableView(QWidget *parent)
 	this->horizontalHeader()->setStretchLastSection(true);
 	this->horizontalHeader()->setHighlightSections(false);
 	this->setFrameShape(QFrame::NoFrame);
-	this->setColumnWidth(0, 30);
-	this->setColumnWidth(1, 170);
+
+#if defined(Q_OS_WIN)
+this->setColumnWidth(0, 20);
+#elif defined(Q_OS_MAC)
+this->setColumnWidth(0, 30);
+#endif
+
+    this->setColumnWidth(1, 170);
 	this->verticalHeader()->setVisible(false);
 	this->horizontalHeader()->setVisible(false);
-	this->resizeColumnsToContents();
-	this->resizeRowsToContents();
 
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	this->setDefaultDropAction(Qt::MoveAction);
