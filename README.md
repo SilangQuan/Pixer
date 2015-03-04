@@ -15,6 +15,9 @@ Pixer is the easiest and most beautiful way to create pixel art in computer.
 OS: Windows 8.1 64bit  
 Visual Studio 2013  
 Qt 5.3.2 64bit/32bit  
+  
+OS: Mac 10.9  
+Qt 5.3.2 + Qt Creator 
 
 ##Release note
 ###beta v0.9 2015-1-5  
@@ -43,8 +46,10 @@ empty.shen@gmail.com
 
 
 ##Screenshots
-![1][1]
-
+![1][1]  
+  
+![2][2]
 
 
   [1]: https://github.com/SilangQuan/Pixer/blob/master/Screenshots/mario.png
+  [2]: https://github.com/SilangQuan/Pixer/blob/master/Screenshots/mario_mac.png
