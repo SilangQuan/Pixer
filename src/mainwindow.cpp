@@ -70,20 +70,37 @@ MainWindow::MainWindow(QWidget *parent)
 	createActions();
 	createMenus();
 
+	toolActionList = new QList<QAction*>();
+	toolActionList->append(moveAct);
+	toolActionList->append(penAct);
+	toolActionList->append(eraserAct);
+	toolActionList->append(selectionAct);
+	toolActionList->append(bucketAct);
+	toolActionList->append(cropAct);
+	toolActionList->append(strawAct);
+	toolActionList->append(dodgeAct);
+	toolActionList->append(zoomAct);
+	
+	effectActionList = new QList<QAction*>();
+	effectActionList->append(sealingLayerAct);
+	effectActionList->append(flipHorizontalLayerAct);
+	effectActionList->append(flipVerticalLayerAct);
+	effectActionList->append(grayScaleAct);
+	effectActionList->append(sepiaAct);
+	effectActionList->append(sepiaBlueAct);
+	effectActionList->append(sepiaGreenAct);
+
+	disableActions();
+
 	toolbar = new QToolBar();
 	this->addToolBar(Qt::LeftToolBarArea, toolbar);
 	toolbar->setStyleSheet("color:black");
-	toolbar->addAction(moveAct);
-	toolbar->addAction(penAct);
-	toolbar->addAction(eraserAct);
-	toolbar->addAction(selectionAct);
-	toolbar->addAction(bucketAct);
-	toolbar->addAction(cropAct);
-	toolbar->addAction(strawAct);
-	toolbar->addAction(dodgeAct);
-	toolbar->addAction(zoomAct);
+	for (int i = 0; i < toolActionList->size(); ++i) {
+		toolbar->addAction(toolActionList->at(i));
+	}
 	toolbar->addSeparator();
 	toolbar->setOrientation(Qt::Vertical);
+
 
 	foreSwatches = new Swatches();
 	foreSwatches->setMinimumSize(30, 30);
@@ -125,7 +142,8 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	connect(canvas, SIGNAL(canvasChanged()), this, SLOT(updateThumbnail()));
 	connect(canvas, SIGNAL(canvasChanged()), layerPanel, SLOT(update()));
-	connect(canvas, SIGNAL(canvasInitialised()), layerPanel, SLOT(enableBtns()));
+
+	connect(canvas, SIGNAL(canvasInitialised()), this, SLOT(enableActions()));
 	
 	historyPanel = new HistoryPanel(canvas->getUndoStack(), this);
 	historyPanel->setWindowTitle(tr("History"));
@@ -361,7 +379,7 @@ void MainWindow::createActions()
 
     penAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/pencil.png"), "Pen", toolbarGroup);
 	penAct->setShortcut(tr("B"));
-	penAct->setCheckable(true);
+	//penAct->setDisabled(true);
 	connect(penAct, SIGNAL(triggered()), this, SLOT(usePen()));
 
     eraserAct = new QAction(QIcon(applicationDir.absolutePath() + "/Resources/images/eraser.png"), "Eraser", toolbarGroup);
@@ -453,6 +471,7 @@ void MainWindow::createMenus()
 	windowsMenu->setStyleSheet(ss);
 
 	toolsMenu = new QMenu(tr("&Tools"), this);
+
 	toolsMenu->addAction(moveAct);
 	toolsMenu->addAction(penAct);
 	toolsMenu->addAction(eraserAct);
@@ -462,7 +481,6 @@ void MainWindow::createMenus()
 	toolsMenu->addAction(strawAct);
 	toolsMenu->addAction(dodgeAct);
 	toolsMenu->addAction(zoomAct);
-	
 	toolsMenu->setStyleSheet(ss);
 
 	menuBar()->addMenu(fileMenu);
@@ -615,6 +633,7 @@ void MainWindow::useMove()
 
 void MainWindow::usePen()
 {
+	qDebug() << penAct->isEnabled();
     QPixmap pixmap(applicationDir.absolutePath() + "/Resources/images/pen_ico.png");
 	QCursor cursor = QCursor(pixmap, -1, -1);
 	canvas->setOperationType(PEN);
@@ -793,4 +812,39 @@ void MainWindow::exchangeSwatches()
 void MainWindow::mouseMoveEvent(QMouseEvent *e)
 {
 	//qDebug() << "mOVE";
+}
+
+void MainWindow::disableActions()
+{
+	for (int i = 0; i < toolActionList->size(); ++i) {
+		toolActionList->at(i)->setDisabled(true);
+	}
+	for (int i = 0; i < effectActionList->size(); ++i) {
+		effectActionList->at(i)->setDisabled(true);
+	}
+
+	zoomInAct->setDisabled(true);
+	zoomOutAct->setDisabled(true);
+	normalSizeAct->setDisabled(true);
+	saveAct->setDisabled(true);
+	saveAsAct->setDisabled(true);
+	exportAct->setDisabled(true);
+}
+
+void MainWindow::enableActions()
+{
+	for (int i = 0; i < toolActionList->size(); ++i) {
+		toolActionList->at(i)->setDisabled(false);
+	}
+	for (int i = 0; i < effectActionList->size(); ++i) {
+		effectActionList->at(i)->setDisabled(false);
+	}
+
+	zoomInAct->setDisabled(false);
+	zoomOutAct->setDisabled(false);
+	normalSizeAct->setDisabled(false);
+	saveAct->setDisabled(false);
+	saveAsAct->setDisabled(false);
+	exportAct->setDisabled(false);
+	layerPanel->enableBtns();
 }

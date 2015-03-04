@@ -23,6 +23,13 @@ ThumbnailPanel::ThumbnailPanel(QWidget * parent) : QDockWidget(parent)
 	zoomOutBtn = new QPushButton(tr("out"), this);
 	zoomInBtn->setFixedWidth(30);
 	zoomOutBtn-> setFixedWidth(30);
+
+#if defined(Q_OS_MAC)
+	scaleFactorLabel->setStyleSheet("color: #ffffff;");
+	zoomInBtn->setStyleSheet("color: #ffffff;");
+	zoomOutBtn->setStyleSheet("color: #ffffff;");
+#endif
+
 	connect(zoomInBtn, SIGNAL(clicked()), this, SLOT(thumbZoomIn()));
 	connect(zoomOutBtn, SIGNAL(clicked()), this, SLOT(thumbZoomOut()));
 	connect(this, SIGNAL(thumbZoom(float)), this, SLOT(updateZoomLabel(float)));

@@ -62,6 +62,7 @@ private:
 	QMenu *helpMenu;
 	QMenu *toolsMenu;
 
+	QList<QAction*> *toolActionList;
 	QActionGroup *toolbarGroup;
 	QAction *newAct;
 	QAction *openAct;
@@ -80,6 +81,7 @@ private:
 	QAction *cropAct;
 	QAction *bucketAct;
 
+	QList<QAction*> *effectActionList;
 	QAction *loadPaletteAct;
 	QAction *savePaletteAct;
 	QAction *sealingLayerAct;
@@ -146,6 +148,9 @@ private slots:
 	void showPaletteWindow();
 	void showLayerWindow();
 	void showHistoryWindow();
+
+	void disableActions();
+	void enableActions();
 
 protected:
 	void keyPressEvent(QKeyEvent *e);	
