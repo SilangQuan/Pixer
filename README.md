@@ -20,7 +20,7 @@ OS: Mac 10.9
 Qt 5.3.2 + Qt Creator 
 
 ## Release note
-###beta v0.9 2015-1-5  
+### beta v0.9 2015-1-5  
 Basic function to draw pixel.  
 
 ### v1.0 2015-1-12  
