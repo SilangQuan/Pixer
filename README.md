@@ -3,7 +3,7 @@ Pixer
 
 Pixer is the easiest and most beautiful way to create pixel art in computer.
 
-##Feature
+## Feature
 *Layer Management.  
 *Undo/Redo.  
 *Dodge/Deepen Tool.  
@@ -11,7 +11,7 @@ Pixer is the easiest and most beautiful way to create pixel art in computer.
 *GrayScale/Sepia/SepiaBlue/SepiaGreen Effect.  
 *Export png/bmp/jpg file with big resolution.   
 
-##Build enviroment
+## Build enviroment
 OS: Windows 8.1 64bit  
 Visual Studio 2013  
 Qt 5.3.2 64bit/32bit  
@@ -19,11 +19,11 @@ Qt 5.3.2 64bit/32bit
 OS: Mac 10.9  
 Qt 5.3.2 + Qt Creator 
 
-##Release note
+## Release note
 ###beta v0.9 2015-1-5  
 Basic function to draw pixel.  
 
-###v1.0 2015-1-12  
+### v1.0 2015-1-12  
 1.Add another swatches.  
 2.Move tool.  
 3.Sealing layer operation.  
@@ -37,15 +37,15 @@ Basic function to draw pixel.
 11.GrayScale/Sepia/SepiaBlue/SepiaGreen Effect.  
 12.Export png/bmp/jpg file with big resolution.  
 
-##Binary Download
+## Binary Download
 https://sourceforge.net/projects/ipixer/  
 
-##Contack
+## Contack
 empty.shen@gmail.com  
 
 
 
-##Screenshots
+## Screenshots
 ![1][1]  
   
 ![2][2]
